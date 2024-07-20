@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <form id="imageForm">
+        <input id="imageInput" type="file" accept="image/*">
+        <button type="submit">Upload</button>
+
+    </form>
+
+    <button type="submit">Get Image</button>
+
+    <script>
+        const imageForm = document.getElementById('imageForm');
+        const imageInput = document.getElementById('imageInput');
+
+        const button = document.querySelector('button');
+
+
+
+        imageForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const file = imageInput.files[0];
+
+            const { url } = await fetch('http://localhost:8080/getS3Url').then(res => {
+                console.log("res", res)
+                return res.json()
+            });
+
+            console.log("url", url);
+
+            // await fetch(url, {
+            //     method: "PUT",
+            //     headers: {
+            //         "Content-Type": "multipart/form-data"
+            //     },
+            //     body: file
+            // })
+
+
+            button.addEventListener('click', async () => {
+                const imageUrl = url.split('?')[0]
+                console.log(imageUrl)
+
+                // post requst to my server to store any extra data         
+                const img = document.createElement("img")
+                img.src = imageUrl
+                document.body.appendChild(img)
+            })
+
+            // const imageUrl = url.split('?')[0]
+            // console.log(imageUrl)
+
+            // // post requst to my server to store any extra data
+
+
+            // const img = document.createElement("img")
+            // img.src = imageUrl
+            // document.body.appendChild(img)
+
+        });
+    </script>
+
+
+</body>
+
+</html>
